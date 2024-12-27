@@ -7,7 +7,8 @@ const Form = () => {
     lastName: '',
     email: '',
     mobile: '',
-    password: ''
+    password: '',
+    confirmPassword:''
   });
 
   const [errors, setErrors] = useState({
@@ -15,7 +16,8 @@ const Form = () => {
     lastName: false,
     email: false,
     mobile: false,
-    password: false
+    password: false,
+    confirmPassword: false,
   });
 
   const validateEmail = (email) => {
@@ -50,6 +52,9 @@ const Form = () => {
       case 'password':
         setErrors((prev) => ({ ...prev, password: !validatePassword(value) }));
         break;
+      case 'confirmPassword':
+        setErrors((prev) => ({ ...prev, confirmPassword: value !== formValues.password }));
+        break;
       case 'firstName':
       case 'lastName':
         setErrors((prev) => ({ ...prev, [id]: value.trim() === '' }));
@@ -64,6 +69,7 @@ const Form = () => {
       validateEmail(formValues.email) &&
       validateMobile(formValues.mobile) &&
       validatePassword(formValues.password) &&
+      formValues.password === formValues.confirmPassword &&
       formValues.firstName.trim() !== '' &&
       formValues.lastName.trim() !== ''
     );
@@ -144,6 +150,19 @@ const Form = () => {
         />
         {errors.password && <span className="error-message">Password must contain at least 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character</span>}
       </div>
+
+       <div className="form-group">
+           <label htmlFor="confirmPassword">Confirm Password:</label>
+           <input
+             type="password"
+             id="confirmPassword"
+             value={formValues.confirmPassword}
+             onChange={handleChange}
+             className={errors.confirmPassword ? 'error' : ''}
+             required />
+
+            {errors.confirmPassword && <span className="error-message">Passwords do not match</span>}
+       </div>
 
       <button type="submit" disabled={!isFormValid()}>Submit</button>
     </form>
